@@ -1,0 +1,17 @@
+node_modules
+frontend
+.git
+.gitignore
+.dockerignore
+.next
+.env
+.env*
+*.env
+.env.local
+temp
+output
+uploads
+*.log
+*.mp4
+*.m3u8
+*.webp
