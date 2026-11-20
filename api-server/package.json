@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "prisma skills sync || exit 0",
-    "contract:emit": "prisma contract emit"
+    "postinstall": "prisma generate || exit 0",
+    "build": "prisma generate",
+    "generate": "prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -14,19 +15,19 @@
   "type": "commonjs",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1147.0",
+    "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
-    "@prisma/orm-postgres": "^8.0.0-rc.16",
     "@tus/s3-store": "^2.0.7",
     "@tus/server": "^2.4.5",
     "bullmq": "^6.3.11",
     "cors": "^2.8.6",
     "dotenv": "^18.0.6",
     "express": "^5.2.1",
-    "ioredis": "^6.0.0"
+    "ioredis": "^6.0.0",
+    "pg": "^8.13.1"
   },
   "devDependencies": {
-    "@prisma/cli-engine": "^0.6.3",
     "@types/node": "^26.6.4",
-    "prisma": "^8.0.0-rc.21"
+    "prisma": "^7.10.0"
   }
 }

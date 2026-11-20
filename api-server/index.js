@@ -15,7 +15,24 @@ const { PrismaClient } = require('@prisma/client');
 const { Queue } = require('bullmq');
 const IORedis = require('ioredis');
 
-const prisma = new PrismaClient();
+function createPrismaClient() {
+    const connectionString = process.env.DATABASE_URL;
+    try {
+        const { PrismaPg } = require('@prisma/adapter-pg');
+        if (PrismaPg && connectionString) {
+            const adapter = new PrismaPg({ connectionString });
+            return new PrismaClient({ adapter });
+        }
+    } catch {}
+
+    try {
+        return new PrismaClient();
+    } catch {
+        return new PrismaClient({ adapter: { provider: 'postgres', adapterName: '@prisma/adapter-pg' } });
+    }
+}
+
+const prisma = createPrismaClient();
 const app = express();
 const port = parseInt(process.env.PORT || '4000', 10);
 const host = '0.0.0.0';

@@ -18,8 +18,8 @@ COPY api-server ./api-server
 COPY transcoding-worker ./transcoding-worker
 COPY start-backend.sh ./start-backend.sh
 
-# Generate/emit Prisma database contract
-RUN cd /app/api-server && npm run contract:emit || true
+# Explicitly generate Prisma Client for api-server matching Prisma 7 version
+RUN cd /app/api-server && npx prisma generate --schema=./prisma/schema.prisma
 
 # Prepare scratch and upload directories and permissions
 RUN chmod +x ./start-backend.sh && \

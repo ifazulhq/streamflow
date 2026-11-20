@@ -12,9 +12,35 @@ const {
     CreateBucketCommand,
     PutBucketPolicyCommand
 } = require('@aws-sdk/client-s3');
-const { PrismaClient } = require('../api-server/src/prisma/client');
+let PrismaClient;
+try {
+    PrismaClient = require('../api-server/node_modules/@prisma/client').PrismaClient;
+} catch {
+    try {
+        PrismaClient = require('@prisma/client').PrismaClient;
+    } catch {
+        PrismaClient = require('../api-server/src/prisma/client').PrismaClient;
+    }
+}
 
-const prisma = new PrismaClient();
+function createPrismaClient() {
+    const connectionString = process.env.DATABASE_URL;
+    try {
+        const { PrismaPg } = require('../api-server/node_modules/@prisma/adapter-pg');
+        if (PrismaPg && connectionString) {
+            const adapter = new PrismaPg({ connectionString });
+            return new PrismaClient({ adapter });
+        }
+    } catch {}
+
+    try {
+        return new PrismaClient();
+    } catch {
+        return new PrismaClient({ adapter: { provider: 'postgres', adapterName: '@prisma/adapter-pg' } });
+    }
+}
+
+const prisma = createPrismaClient();
 
 // Configure FFmpeg binary paths (auto-detect Winget or default system PATH)
 const wingetFfmpeg = 'C:\\Users\\IFAZUL HAQUE\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-9.0.2-full_build\\bin\\ffmpeg.exe';
