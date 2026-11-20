@@ -34,6 +34,7 @@ function createPrismaClient() {
 
 const prisma = createPrismaClient();
 const app = express();
+app.set('trust proxy', 1);
 const port = parseInt(process.env.PORT || '4000', 10);
 const host = '0.0.0.0';
 
@@ -143,7 +144,21 @@ app.use(cors({
         }
         return callback(null, true);
     },
-    credentials: true,
+    methods: ['GET', 'HEAD', 'PATCH', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
+        'Origin',
+        'X-Requested-With',
+        'Content-Type',
+        'Accept',
+        'Authorization',
+        'Upload-Length',
+        'Upload-Offset',
+        'Tus-Resumable',
+        'Upload-Metadata',
+        'Upload-Defer-Length',
+        'Upload-Concat',
+        'X-HTTP-Method-Override'
+    ],
     exposedHeaders: [
         'Tus-Resumable',
         'Tus-Version',
@@ -155,7 +170,8 @@ app.use(cors({
         'Upload-Metadata',
         'Upload-Defer-Length',
         'Upload-Concat'
-    ]
+    ],
+    credentials: true,
 }));
 
 app.use(express.json());
@@ -163,6 +179,13 @@ app.use(express.json());
 // Initialize Tus server with @tus/s3-store connected to MinIO raw-videos bucket
 const tusServer = new Server({
     path: '/uploads',
+    respectForwardedHeaders: true,
+    generateUrl: (req, { proto, host, path, id }) => {
+        const forwardedProto = req.headers['x-forwarded-proto'];
+        const scheme = forwardedProto ? forwardedProto.split(',')[0].trim() : (req.secure ? 'https' : proto);
+        const resolvedHost = (req.headers['x-forwarded-host'] || host).split(',')[0].trim();
+        return `${scheme}://${resolvedHost}${path}/${id}`;
+    },
     datastore: new S3Store({
         s3ClientConfig: {
             ...s3Config,

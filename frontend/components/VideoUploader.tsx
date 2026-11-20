@@ -142,7 +142,17 @@ export default function VideoUploader() {
       .findPreviousUploads()
       .then((previousUploads) => {
         if (previousUploads.length > 0) {
-          upload.resumeFromPreviousUpload(previousUploads[0]);
+          const prev = previousUploads[0];
+          // Guard against stale mixed-content http:// URLs stored before proxy fix
+          if (
+            typeof window !== "undefined" &&
+            window.location.protocol === "https:" &&
+            prev.uploadUrl &&
+            prev.uploadUrl.startsWith("http://")
+          ) {
+            prev.uploadUrl = prev.uploadUrl.replace(/^http:\/\//, "https://");
+          }
+          upload.resumeFromPreviousUpload(prev);
         }
         upload.start();
       })
