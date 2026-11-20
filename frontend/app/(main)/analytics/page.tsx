@@ -4,6 +4,7 @@ import { Upload, Activity, Layers, BarChart2 } from "lucide-react";
 import AnalyticsChart, { ChartDataPoint } from "@/components/AnalyticsChart";
 import InteractiveButton from "@/components/InteractiveButton";
 import AuthWidget from "@/components/AuthWidget";
+
 export const instant = false;
 
 interface VideoRecord {

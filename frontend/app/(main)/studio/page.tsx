@@ -13,6 +13,7 @@ import {
 
 export const instant = false;
 
+
 async function getAllVideos(): Promise<VideoRecord[]> {
   const apiUrl = process.env.API_URL || "http://localhost:8000";
   try {

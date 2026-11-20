@@ -7,6 +7,7 @@ import AuthWidget from "@/components/AuthWidget";
 
 export const instant = false;
 
+
 export const metadata = {
   title: "API Reference & Developer Hub | StreamFlow",
   description: "Developer integration guide, REST API specifications, and drop-in player embeds.",

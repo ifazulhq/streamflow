@@ -5,6 +5,7 @@ import CinemaPlayer from "@/components/CinemaPlayer";
 
 export const instant = false;
 
+
 interface VideoData {
   id: string;
   uploadId: string;

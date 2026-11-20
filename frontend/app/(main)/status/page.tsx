@@ -10,6 +10,7 @@ import { getSystemHealth } from "@/lib/health";
 
 export const instant = false;
 
+
 export const metadata: Metadata = {
   title: "System Status — Infrastructure & Health | StreamFlow",
   description: "Real-time infrastructure health and uptime monitoring for StreamFlow video streaming platform.",
